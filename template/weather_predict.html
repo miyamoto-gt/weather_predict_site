@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather_predict</title>
+    <link rel="stylesheet" href="weather_predict.css">
+</head>
+
+<body>
+
+    <h1>天気予測サイト</h1>
+    <h2>翌日の降雨予測</h2>
+
+    <!-- 🔽 結果エリア（入力の上） -->
+    <div id="result" class="result-box hidden">
+        <p class="result-title">予測結果</p>
+        <p class="result-value">--</p>
+        <button onclick="closeResult()">閉じる</button>
+    </div>
+
+    <!-- フォーム -->
+    <div class="form">
+
+        <label>平均気温</label>
+        <input type="number" id="AvgTemp" placeholder="例: 23.0">
+
+        <label>降水量</label>
+        <input type="number" id="TotalPrecip" placeholder="例: 0.0">
+
+        <label>日照時間</label>
+        <input type="number" id="SolarHours" placeholder="例: 6.0">
+
+        <label>雲量</label>
+        <input type="number" id="AvgCloud" placeholder="例: 8.0">
+
+        <label>平均蒸気圧</label>
+        <input type="number" id="vapor_pressure" placeholder="例: 13">
+
+        <label>平均風速</label>
+        <input type="number" id="AvgWindSpeed" placeholder="例: 3">
+
+        <label>最低気温</label>
+        <input type="number" id="MinTemp" placeholder="例: 20.0">
+
+        <button onclick="predictWeather()">予測する</button>
+
+    </div>
+
+    <script src="weather_predict.js"></script>
+
+</body>
+</html>

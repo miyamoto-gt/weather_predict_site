@@ -14,9 +14,9 @@ df_weather["Month"] = df_weather["Month"].ffill()
 df_weather["MinTemp"] = df_weather["MinTemp"].ffill()
 df_weather["AvgTemp"] = df_weather["AvgTemp"].ffill()
 df_weather["AvgWindSpeed"] = df_weather["AvgWindSpeed"].ffill()
-df_weather["AvgSeaLevelPressure"] = df_weather["AvgSeaLevelPressure"].ffill()
+df_weather["vapor_pressure"] = df_weather["vapor_pressure"].ffill()
 df_weather["AvgCloud"] = df_weather["AvgCloud"].fillna(df_weather["AvgCloud"].mean())
-df_weather["AvgSeaLevelPressure"] = df_weather["AvgSeaLevelPressure"].fillna(df_weather["AvgSeaLevelPressure"].mean())
+df_weather["vapor_pressure"] = df_weather["vapor_pressure"].fillna(df_weather["vapor_pressure"].mean())
 df_weather = df_weather.dropna(subset=["Day", "TotalPrecip", "SolarHours"])
 df_weather[["Day", "Month"]] = df_weather[["Day", "Month"]].astype(int)
 
@@ -29,7 +29,7 @@ df["next_day_weather"] = df["next_day_weather"].astype(int)
 
 
 # 特徴量
-element_name = ["AvgTemp", "TotalPrecip", "SolarHours","AvgCloud", "AvgSeaLevelPressure","AvgWindSpeed", "MinTemp"]
+element_name = ["AvgTemp", "TotalPrecip", "SolarHours","AvgCloud", "vapor_pressure","AvgWindSpeed", "MinTemp"]
 X = df[element_name]
 y = df["next_day_weather"]
 
@@ -38,7 +38,7 @@ X_const = sm.add_constant(X)
 
 
 # 時系列分割（過学習チェック）
-X_train, X_test, y_train, y_test = train_test_split(X_const, y,test_size=0.2,random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X_const, y,test_size=0.2,random_state=1)
 
 
 

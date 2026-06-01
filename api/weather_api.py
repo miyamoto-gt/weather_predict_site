@@ -3,7 +3,16 @@ import joblib
 import pandas as pd
 from pydantic import BaseModel
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware# モデルの読み込み
 app =FastAPI()
+# CORS設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 base_dir=os.path.dirname(os.path.abspath(__file__))
 project_root=os.path.dirname(base_dir)
@@ -11,8 +20,6 @@ project_root=os.path.dirname(base_dir)
 model_path=os.path.join(project_root,"models","model.joblib")
 
 try:
-    import statsmodels.api as sm
-
     result=joblib.load(model_path)
     print("\nConnected model!\n")
 
@@ -25,7 +32,7 @@ class weatherdata(BaseModel):
     TotalPrecip:float
     SolarHours:float
     AvgCloud:float
-    AvgSeaLevelPressure:float
+    vapor_pressure:float
     AvgWindSpeed:float
     MinTemp:float
 @app.post("/predict")
@@ -36,7 +43,7 @@ def predict(data: weatherdata):
         "TotalPrecip":data.TotalPrecip,
         "SolarHours":data.SolarHours,
         "AvgCloud":data.AvgCloud,
-        "AvgSeaLevelPressure":data.AvgSeaLevelPressure,
+        "vapor_pressure":data.vapor_pressure,
         "AvgWindSpeed":data.AvgWindSpeed,
         "MinTemp":data.MinTemp
     }])
@@ -44,5 +51,5 @@ def predict(data: weatherdata):
     df.insert(0,"const",1.0)
     prediction=result.predict(df)
     return{
-        "rain_probalitty":round(float(prediction.iloc[0]*100),1)
+        "rain_probability":round(float(prediction.iloc[0]*100),1)
     }

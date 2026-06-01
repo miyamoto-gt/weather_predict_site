@@ -1,4 +1,4 @@
-Year,Month,Day,TotalPrecip,SolarHours,AvgCloud,MinTemp,AvgTemp,AvgSeaLevelPressure,AvgWindSpeed
+Year,Month,Day,TotalPrecip,SolarHours,AvgCloud,MinTemp,AvgTemp,vapor_pressure,AvgWindSpeed
 2006,5,24,2.5,0.2,10,12.8,14.9,14.3,3
 2006,5,25,0,11,3,10.8,15.7,12.6,4.4
 2006,5,26,0,0,10,14.2,18.8,13.8,1.8
