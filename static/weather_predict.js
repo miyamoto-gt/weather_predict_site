@@ -27,9 +27,7 @@ async function predictWeather() {
         }
 
         const result = await response.json();
-        console.log(result);
-
-        const rainProb = result.rain_probability;
+        const rainProb = Number(result.rain_probability);
 
         value.textContent = rainProb.toFixed(1) + "%";
         box.classList.remove("hidden");
@@ -40,6 +38,7 @@ async function predictWeather() {
         box.classList.remove("hidden");
     }
 }
+
 
 function closeResult() {
     document.getElementById("result").classList.add("hidden");
