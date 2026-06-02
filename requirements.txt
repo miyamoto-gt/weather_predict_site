@@ -3,5 +3,8 @@ uvicorn
 pandas
 joblib
 pydantic
+jinja2
+python-multipart
 scikit-learn
 statsmodels
+numpy
