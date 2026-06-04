@@ -37,8 +37,8 @@ y = df["next_day_weather"]
 X_const = sm.add_constant(X)
 
 
-# 時系列分割（過学習チェック）
-X_train, X_test, y_train, y_test = train_test_split(X_const, y,test_size=0.2,random_state=1)
+# ランダム分割
+X_train, X_test, y_train, y_test = train_test_split(X_const, y,test_size=0.2,random_state=42)
 
 
 
