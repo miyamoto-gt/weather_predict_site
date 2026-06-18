@@ -1,6 +1,5 @@
 import pandas as pd
 import statsmodels.api as sm
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 import joblib
 
