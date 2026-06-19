@@ -42,12 +42,11 @@
         <input type="number" id="MinTemp" placeholder="例: 20.0">
 
         <button onclick="predictWeather()">予測する</button>
-        <p class="source-link">
-            ：
-            <a href="https://www.data.jma.go.jp/stats/mdrr/synopday/data1s.html" target="_blank">
-                気象庁 過去の気象データ
-            </a>
-        </p>
+        <form action="https://www.data.jma.go.jp/stats/mdrr/synopday/data1s.html" target="_blank" style="display: inline-block;">
+          <button type="submit" class="custom-btn">
+            気象庁 過去の気象データ
+          </button>
+        </form>
     </div>
 
     <script src="/static/weather_predict.js"></script>
