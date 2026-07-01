@@ -1,7 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f9;
+    background: linear-gradient(135deg, #eaf4ff, #f8fbff);
     margin: 0;
+    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -9,21 +10,27 @@ body {
 }
 
 h1 {
-    margin-top: 30px;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    font-size: 32px;
 }
 
 h2 {
-    color: #555;
+    color: #667;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 10px;
 }
 
 .form {
     background: white;
-    padding: 25px 30px;
+    padding: 28px 32px;
     margin-top: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 
-    width: 340px;
+    width: 360px;
 
     display: flex;
     flex-direction: column;
@@ -33,39 +40,61 @@ h2 {
 label {
     font-size: 13px;
     color: #333;
+    font-weight: bold;
+    margin-top: 6px;
 }
 
 input {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d0d7de;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
 }
 
 button {
-    margin-top: 15px;
-    padding: 10px;
+    margin-top: 18px;
+    padding: 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #4a90e2;
     color: white;
+    font-size: 15px;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 .result-box {
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 180px;
 
     background: white;
-    border-radius: 14px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 24px;
+    margin-bottom: 8px;
 
     text-align: center;
     transition: 0.3s;
@@ -82,9 +111,10 @@ button {
 }
 
 .result-value {
-    font-size: 30px;
+    font-size: 36px;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 12px;
+    color: #2d6cdf;
 }
 
 .result-prob {
@@ -100,4 +130,38 @@ button {
 
 .sun {
     color: #f39c12;
+}
+
+/* 気象庁リンク */
+.source-link {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 14px;
+    color: #666;
+}
+
+.source-link a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.source-link a:hover {
+    text-decoration: underline;
+}
+
+/* スマホ対応 */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 26px;
+    }
+
+    .form {
+        width: 85%;
+        padding: 24px;
+    }
+
+    .result-box {
+        width: 200px;
+        height: 160px;
+    }
 }
