@@ -1,13 +1,12 @@
 async function predictWeather() {
 
     const data = {
+        Month: Number(document.getElementById("Month").value) || 0,
+        MinTemp: Number(document.getElementById("MinTemp").value) || 0,
         AvgTemp: Number(document.getElementById("AvgTemp").value) || 0,
         TotalPrecip: Number(document.getElementById("TotalPrecip").value) || 0,
-        SolarHours: Number(document.getElementById("SolarHours").value) || 0,
-        AvgCloud: Number(document.getElementById("AvgCloud").value) || 0,
         vapor_pressure: Number(document.getElementById("vapor_pressure").value) || 0,
-        AvgWindSpeed: Number(document.getElementById("AvgWindSpeed").value) || 0,
-        MinTemp: Number(document.getElementById("MinTemp").value) || 0
+        AvgCloud: Number(document.getElementById("AvgCloud").value) || 0
     };
 
     const value = document.querySelector(".result-value");

@@ -20,28 +20,26 @@
 
     <div class="form">
 
+        <label>月</label>
+        <input type="number" id="Month" placeholder="例: 7">
+
+        <label>最低気温</label>
+        <input type="number" id="MinTemp" placeholder="例: 20.0">
+
         <label>平均気温</label>
         <input type="number" id="AvgTemp" placeholder="例: 23.0">
 
         <label>降水量</label>
         <input type="number" id="TotalPrecip" placeholder="例: 0.0">
 
-        <label>日照時間</label>
-        <input type="number" id="SolarHours" placeholder="例: 6.0">
+        <label>平均蒸気圧</label>
+        <input type="number" id="vapor_pressure" placeholder="例: 13">
 
         <label>雲量</label>
         <input type="number" id="AvgCloud" placeholder="例: 8.0">
 
-        <label>平均蒸気圧</label>
-        <input type="number" id="vapor_pressure" placeholder="例: 13">
-
-        <label>平均風速</label>
-        <input type="number" id="AvgWindSpeed" placeholder="例: 3">
-
-        <label>最低気温</label>
-        <input type="number" id="MinTemp" placeholder="例: 20.0">
-
         <button onclick="predictWeather()">予測する</button>
+
         <p class="source-link">
             ：
             <a href="https://www.data.jma.go.jp/stats/mdrr/synopday/data1s.html" target="_blank">

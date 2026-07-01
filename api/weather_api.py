@@ -44,26 +44,24 @@ except FileNotFoundError:
 
 
 class WeatherData(BaseModel):
+    Month: float
+    MinTemp: float
     AvgTemp: float
     TotalPrecip: float
-    SolarHours: float
-    AvgCloud: float
     vapor_pressure: float
-    AvgWindSpeed: float
-    MinTemp: float
+    AvgCloud: float
 
 
 @app.post("/predict")
 def predict(data: WeatherData):
 
     df = pd.DataFrame([{
+        "Month": data.Month,
+        "MinTemp": data.MinTemp,
         "AvgTemp": data.AvgTemp,
         "TotalPrecip": data.TotalPrecip,
-        "SolarHours": data.SolarHours,
-        "AvgCloud": data.AvgCloud,
         "vapor_pressure": data.vapor_pressure,
-        "AvgWindSpeed": data.AvgWindSpeed,
-        "MinTemp": data.MinTemp
+        "AvgCloud": data.AvgCloud
     }])
 
     df.insert(0, "const", 1.0)

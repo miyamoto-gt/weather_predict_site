@@ -1,44 +1,35 @@
 import pandas as pd
 import statsmodels.api as sm
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score
 import joblib
 
-# データの結合
-df1 = pd.read_csv("data/weather1996~2006.csv")
-df2 = pd.read_csv("data/weather2006~2016.csv")
-df3 = pd.read_csv("data/weather2016~2026.csv")
-df_weather = pd.concat([df1, df2, df3], ignore_index=True)
+# データ取得
+df_weather = pd.read_csv("data/weather2011~2016.csv")
+
 # 前処理
-df_weather["Month"] = df_weather["Month"].ffill()
 df_weather["MinTemp"] = df_weather["MinTemp"].ffill()
 df_weather["AvgTemp"] = df_weather["AvgTemp"].ffill()
+df_weather["TotalPrecip"] = df_weather["TotalPrecip"].fillna(0)
+df_weather["SolarHours"] = df_weather["SolarHours"].ffill()
 df_weather["AvgWindSpeed"] = df_weather["AvgWindSpeed"].ffill()
 df_weather["vapor_pressure"] = df_weather["vapor_pressure"].ffill()
-df_weather["AvgCloud"] = df_weather["AvgCloud"].fillna(df_weather["AvgCloud"].mean())
-df_weather["vapor_pressure"] = df_weather["vapor_pressure"].fillna(df_weather["vapor_pressure"].mean())
-df_weather = df_weather.dropna(subset=["Day", "TotalPrecip", "SolarHours"])
-df_weather[["Day", "Month"]] = df_weather[["Day", "Month"]].astype(int)
+df_weather= df_weather.dropna(subset="AvgCloud")
 
 # 目的変数
 df_weather["next_day_weather"] = (df_weather["TotalPrecip"] > 0).astype(int).shift(-1)
-
 df = df_weather.drop(df_weather.index[-1]).copy()
 df["next_day_weather"] = df["next_day_weather"].astype(int)
 
+element_name = ["Month","MinTemp","AvgTemp", "TotalPrecip", "vapor_pressure","AvgCloud"]
+explanatory_variables = df[element_name]
+objective_variable = df["next_day_weather"]
+X_all_const = sm.add_constant(explanatory_variables)
 
+X_train, X_test, y_train, y_test = train_test_split(
+    X_all_const, objective_variable, test_size=0.2, shuffle=False
+)
 
-# 特徴量
-element_name = ["AvgTemp", "TotalPrecip", "SolarHours","AvgCloud", "vapor_pressure","AvgWindSpeed", "MinTemp"]
-X = df[element_name]
-y = df["next_day_weather"]
-
-# 定数項追加
-X_const = sm.add_constant(X)
-
-
-# ランダム分割
-X_train, X_test, y_train, y_test = train_test_split(X_const, y,test_size=0.2,random_state=42)
 
 
 
