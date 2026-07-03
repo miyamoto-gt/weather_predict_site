@@ -4,8 +4,7 @@
 
 本プロジェクトは、前回開発した「翌日の降雨予測モデル」をWebアプリケーションとして利用できるようにすることを目的として取り組んだものである。
 
-前回の機械学習プロジェクトでは、気象庁の約30年分の気象データを用いて、ロジスティック回帰による翌日の降雨予測モデルを構築した。
-その結果、約73％の予測精度を確認できた。
+前回の機械学習プロジェクトでは、気象庁のデータからモデルの構築を行った。
 
 しかし、学習済みモデルを作成しただけでは、Python環境を持たない一般ユーザーが利用することはできない。
 そこで今回は、学習済みモデルを `joblib` で保存し、FastAPIを用いてAPI化した。さらに、HTML・CSS・JavaScriptで作成したフロントエンドと連携することで、Webブラウザから気象データを入力し、翌日の降雨確率を確認できるWebアプリとして実装した。
@@ -60,9 +59,7 @@ weather_predict_site/
 │   └── weather_api.py
 │
 ├── data/
-│   ├── weather1996~2006.csv
-│   ├── weather2006~2016.csv
-│   └── weather2016~2026.csv
+│   └── weather2011~2016.csv
 │
 ├── models/
 │   └── model.joblib
@@ -127,17 +124,15 @@ https://www.data.jma.go.jp/risk/obsdl/index.php
 
 使用期間：
 
-* 1996年〜2026年
+* 2011年〜2016年
 
 使用した特徴量：
-
+* 月(Month)
 * 平均気温（AvgTemp）
 * 最低気温（MinTemp）
 * 降水量（TotalPrecip）
-* 日照時間（SolarHours）
 * 雲量（AvgCloud）
 * 平均蒸気圧（vapor_pressure）
-* 平均風速（AvgWindSpeed）
 
 ---
 
@@ -174,17 +169,9 @@ API側では受け取った値をDataFrameに変換し、保存済みモデル�
 
 ## モデル構築
 
-本プロジェクトでは、モデル構築リポジトリから、精度と混同行列においての偏りのバランスが良い、ランダム分割モデルを採用しました。
+本プロジェクトでは、モデル構築リポジトリから、データ量ごとに比較し、最も制度の良いモデルを選択した
 
 詳細な比較検証のプロセスやコードは、上記の[前回のモデル構築リポジトリ](#前回のモデル構築リポジトリ)の精度比較を参照しています。
-
-### ランダム分割モデルを採用した理由
-
-一見すると時系列分割モデルの方が精度（98%）が良く見えますが、混同行列を分析すると、データの偏りに引きずられて機械的に同じ予測を繰り返しているだけの状態（予測モデルとして機能していない状態）であることが分かった。
-
-一方、ランダム分割モデルは精度が73%に低下しますが、混同行列が示す通り、異なる天候のパターンを見分けて予測を出力できている。
-
-Webアプリとしてユーザーに価値のある「実用的な予測能力」を最優先に重視するため、単に数値上の精度が高いだけのモデルを選ぶのではなく、**「精度とクラスの偏り（予測の健全性）のバランスが最も優れている」**という検証結果に基づき、今回のランダム分割モデルをウェブアプリケーションへ組み込みました。
 
 ## 学習済みモデルの保存
 
@@ -294,13 +281,12 @@ API起動時に、`models/model.joblib` を読み込む。
 
 ```python
 class WeatherData(BaseModel):
+    Month: float
+    MinTemp: float
     AvgTemp: float
     TotalPrecip: float
-    SolarHours: float
-    AvgCloud: float
     vapor_pressure: float
-    AvgWindSpeed: float
-    MinTemp: float
+    AvgCloud: float
 ```
 
 Pydanticの `BaseModel` を用いて、APIが受け取る入力データの形式を定義した。
@@ -321,14 +307,13 @@ def predict(data: WeatherData):
 
 ```python
 df = pd.DataFrame([{
-    "AvgTemp": data.AvgTemp,
-    "TotalPrecip": data.TotalPrecip,
-    "SolarHours": data.SolarHours,
-    "AvgCloud": data.AvgCloud,
-    "vapor_pressure": data.vapor_pressure,
-    "AvgWindSpeed": data.AvgWindSpeed,
-    "MinTemp": data.MinTemp
-}])
+        "Month": data.Month,
+        "MinTemp": data.MinTemp,
+        "AvgTemp": data.AvgTemp,
+        "TotalPrecip": data.TotalPrecip,
+        "vapor_pressure": data.vapor_pressure,
+        "AvgCloud": data.AvgCloud
+    }])
 ```
 
 学習時に定数項 `const` を追加していたため、API側でも同じように追加する。
@@ -366,21 +351,11 @@ HTMLでは、以下の7つの入力フォームを用意した。
 
 * 平均気温
 * 降水量
-* 日照時間
+* 月
 * 雲量
 * 平均蒸気圧
-* 平均風速
 * 最低気温
 
-```html
-<input type="number" id="AvgTemp" placeholder="例: 23.0">
-<input type="number" id="TotalPrecip" placeholder="例: 0.0">
-<input type="number" id="SolarHours" placeholder="例: 6.0">
-<input type="number" id="AvgCloud" placeholder="例: 8.0">
-<input type="number" id="vapor_pressure" placeholder="例: 13">
-<input type="number" id="AvgWindSpeed" placeholder="例: 3">
-<input type="number" id="MinTemp" placeholder="例: 20.0">
-```
 
 ユーザーが「予測する」ボタンを押すと、JavaScriptの `predictWeather()` 関数が実行される。
 
@@ -430,14 +405,13 @@ JavaScriptでは、入力フォームの値を取得し、FastAPIの `/predict` 
 
 ```javascript
 const data = {
-    AvgTemp: Number(document.getElementById("AvgTemp").value) || 0,
-    TotalPrecip: Number(document.getElementById("TotalPrecip").value) || 0,
-    SolarHours: Number(document.getElementById("SolarHours").value) || 0,
-    AvgCloud: Number(document.getElementById("AvgCloud").value) || 0,
-    vapor_pressure: Number(document.getElementById("vapor_pressure").value) || 0,
-    AvgWindSpeed: Number(document.getElementById("AvgWindSpeed").value) || 0,
-    MinTemp: Number(document.getElementById("MinTemp").value) || 0
-};
+        Month: Number(document.getElementById("Month").value) || 0,
+        MinTemp: Number(document.getElementById("MinTemp").value) || 0,
+        AvgTemp: Number(document.getElementById("AvgTemp").value) || 0,
+        TotalPrecip: Number(document.getElementById("TotalPrecip").value) || 0,
+        vapor_pressure: Number(document.getElementById("vapor_pressure").value) || 0,
+        AvgCloud: Number(document.getElementById("AvgCloud").value) || 0
+    };
 ```
 
 取得したデータはJSON形式に変換し、APIへ送信する。
